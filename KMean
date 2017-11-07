@@ -1,0 +1,30 @@
+import numpy as np
+from sklearn.cluster import KMeans
+def loadData(filename):
+    fr=open(filename,'r')
+    lines=fr.readlines()
+    reData=[]
+    reName=[]
+    Number=0
+    for line  in lines:
+        items=line.strip().split(' ')
+        reName.append(Number)
+        reData.append([float(items[i]) for i in range(1,len(items))])
+        Number=Number+1
+    return reData,reName
+    
+
+if __name__=="__main__":
+    data,cityName=loadData("citydata.txt")
+    km=KMeans(n_clusters=3)
+    lable=km.fit_predict(data)
+    print(lable)
+    expensses=np.sum(km.cluster_centers_,axis=1)
+    print(np.sum(km.cluster_centers_[1]))
+    
+    Citycluster=[[],[],[]]
+    for i in range(len(cityName)):
+        Citycluster[lable[i]].append(cityName[i])
+    for i in range (len(Citycluster)):
+        print("Expense:%2f"%expensses[i])
+        print(Citycluster[i])
