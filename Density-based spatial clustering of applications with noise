@@ -1,0 +1,42 @@
+import numpy as np
+import sklearn.cluster as skc
+from sklearn import metrics
+import matplotlib.pyplot as plt
+
+mac2id=dict()
+onlinetimes=[]
+f=open("student_internet.txt")
+for line in f:
+    mac=line.split(",")[2]
+    onlinetime=int(line.split(",")[6])
+    starttime=int(line.split(",")[4].split(" ")[1].split(':')[0])
+    if mac not in mac2id:
+        mac2id[mac]=len(onlinetimes)
+        onlinetimes.append((starttime,onlinetime))
+    else:
+        onlinetimes[mac2id[mac]]=[(starttime,onlinetime)]
+        print("I am show")
+        
+real_X=np.array(onlinetimes).reshape(-1,2)
+X=real_X[:,0:1]
+db=skc.DBSCAN(eps=0.05,min_samples=10).fit(X)
+labels = db.labels_ 
+print("Lales:")
+print(labels)
+ration=1.0*len(labels[:]==-1)/len(labels)
+print("Nosie ration:",ration)
+
+n_cluser=len(set(labels[:]))-(1 if -1 in labels else 0)
+print("number of cluster",n_cluser)
+result=[]
+x=[]
+for i in range(n_cluser):
+    print("cluster",i,':')
+    print(list(X[labels==i].flatten()))
+    result.append(len(X[labels==i]))
+    x.append(list(X[labels==i])[1])
+   
+    
+plt.hist(X,24)
+plt.plot(x,result,'D')
+plt.show()
